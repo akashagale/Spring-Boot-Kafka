@@ -1,0 +1,132 @@
+
+Session-8  
+----------------
+
+1 open docker and run below command in the cmd 
+path - "E:\Kafka\kafka-for-developers-using-spring-boot-v2\kafka-for-developers-using-spring-boot-v2-main\docker-compose.yml" 
+
+>> docker-compose up
+-----------------
+
+2 Create a Kafka topic using the kafka-topics command
+>> docker exec -it kafka1 bash
+
+>> kafka-topics --bootstrap-server kafka1:19092 \
+             --create \
+             --topic test-topic \
+             --replication-factor 1 --partitions 1
+
+exit
+ 
+----------------
+3 Producer
+
+>> docker exec -it kafka1 kafka-console-producer --bootstrap-server kafka1:19092 --topic test-topic
+---------------
+4 Consumer 
+consume message from topcs
+
+>> docker exec -it kafka1 kafka-console-consumer --bootstrap-server kafka1:19092 --topic test-topic --from-beginning
+
+-------------------------------
+Session-9 (Producer and Consume the Messages With Key and Value)
+-------------------------------
+
+5 open docker and run below command in the cmd 
+path - "E:\Kafka\kafka-for-developers-using-spring-boot-v2\kafka-for-developers-using-spring-boot-v2-main\docker-compose.yml" 
+
+docker-compose up
+-------------
+6 Producer and consume message using key and value
+>> docker exec -it kafka1 kafka-console-producer --bootstrap-server kafka1:19092 --topic test-topic --property "key.separator=-" --property "parse.key=true"
+-------------
+
+7 Consumer
+>> docker exec -it kafka1 kafka-console-consumer --bootstrap-server kafka1:19092 --topic test-topic --from-beginning --property "key.separator= - " --property "print.key=true"
+-------------
+Test in Producer
+
+A-Apple 
+B-Ball
+-------------
+
+-------------------------------
+Session-10 (Consumer offsets)
+-------------------------------
+8 List the topics in a cluster(new cmd)
+>> docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --list
+
+-------------------------------
+Session-11 (Consumer Groups)
+-------------------------------
+
+9 How to view consumer groups
+>> docker exec -it kafka1 kafka-consumer-groups --bootstrap-server kafka1:19092 --list
+-------------------
+
+10 Consume Messages using Consumer Groups run in consumer console
+>> docker exec -it kafka1 kafka-console-consumer --bootstrap-server kafka1:19092 --topic test-topic --group console-consumer-57389 --property "key.separator=-" --property "print.key=true"
+-------------------
+
+11 Command to describe a specific Kafka topic and show partitions list from producer console
+>> docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --describe --topic test-topic
+-------------------
+
+12 Alter topic partition from producer cmd
+>> docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --alter --topic test-topic --partitions 2
+
+
+-------------------------------
+Session-12 Commit Log and Retention Policy
+-------------------------------
+
+13 Log file and related config
+-------------------
+docker exec -it kafka1 bash
+
+14 The config file is present in the below path
+-------------------
+>> cd /etc/kafka/server.properties
+
+15 Commit log path
+------------------
+>> cd /var/lib/kafka/data/
+
+
+-------------------------------
+Session-14 Set up a Kafka Cluster with 3 brokers
+-------------------------------
+
+
+16 Run this command and this will spin up a kafka cluster with 3 brokers.
+------------------
+>> docker-compose -f docker-compose-multi-broker.yml up
+
+
+17 Create topic (test-topic1) with the replication factor as 3
+------------------
+>> docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --create --topic test-topic --replication-factor 3 --partitions 3
+
+18 Produce Messages to the topic.
+------------------
+>> docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:9092,kafka2:19093,kafka3:19094 --topic test-topic1
+
+19 Consume Messages from the topic.
+------------------
+docker exec -it kafka1 kafka-console-consumer --bootstrap-server kafka1:19092,kafka2:19093,kafka3:19094 --topic test-topic1 --from-beginning
+
+Starting & Stopping the Kafka by container id (cid)
+------------------
+20 docker stop <cid>
+
+docker start <cid>
+
+-------------------------------
+Session-17 Configuring min.insync.replicas
+-------------------------------
+
+22 Setting up min.insync.replica
+-----------------
+docker exec -it kafka1 kafka-configs --bootstrap-server kafka1:19092,kafka2:19093,kafka3:19094 --entity-type topics --entity-name test-topic1 --alter --add-config min.insync.replicas=2
+
+
