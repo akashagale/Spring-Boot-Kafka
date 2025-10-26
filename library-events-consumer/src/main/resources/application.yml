@@ -1,0 +1,30 @@
+spring:
+  application:
+    name:
+      library-events-consumer
+  profiles:
+    active: local # prod dev qa
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer  # Integer due to LibraryEventId in the entity class
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: "library-events-listener-group"
+---
+spring:
+  config:
+    activate:
+      on-profile: non-prod
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer  # Integer due to LibraryEventId in the entity class
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
