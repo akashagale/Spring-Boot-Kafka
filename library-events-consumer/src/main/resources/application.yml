@@ -12,12 +12,31 @@ spring:
   config:
     activate:
       on-profile: local
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/kafka
+    username: root
+    password: Akash@1998
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+
   kafka:
     consumer:
       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer  # Integer due to LibraryEventId in the entity class
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: "library-events-listener-group"
+
+
 ---
 spring:
   config:

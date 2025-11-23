@@ -10,6 +10,6 @@ public class LibraryEventsConsumerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryEventsConsumerApplication.class, args);
-		log.info("Consumer Application Started..........");
+		System.out.println("Consumer Application Started--------------->");
 	}
 }
